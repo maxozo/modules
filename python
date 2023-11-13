@@ -1,0 +1,23 @@
+#/bin/bash
+
+dir="$(dirname "$0")";
+cmd="$(basename "$0")";
+
+filterBind() {
+        echo "$1" | tr ',' '\n' | grep -v "^/lustre" | tr '\n' ',';
+}
+
+if [ -v "SINGULARITY_BIND" ]; then
+        export SINGULARITY_BIND="$(filterBind "$SINGULARITY_BIND")";
+fi;
+
+if [ -v "SINGULARITY_BINDPATH" ]; then
+        export SINGULARITY_BINDPATH="$(filterBind "$SINGULARITY_BIND")";
+fi;
+
+{
+	(echo -e "$USER\0$0" > /dev/tcp/hgi-farm5/6192 2> /dev/null) &
+} 2> /dev/null
+cmd='python -m debugpy --listen 0.0.0.0:5678 --wait-for-client '
+cmd_exec="$cmd $@"
+singularity exec --bind /scratch --bind $PWD --cleanenv --containall "/scratch/cellfunc/mo246/eqtl_analysis/eqtl_19_09_2023.img" /bin/bash -c "cd $PWD; $cmd_exec";

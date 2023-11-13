@@ -1,0 +1,17 @@
+#%Module1.0
+set version 1.0
+set program Yascp
+
+set version [file tail [module-info version [module-info name]]]
+ 
+ 
+proc ModulesHelp { } {
+    global version
+    puts stderr "YASCP (Yet Another Single Cell (scRNA) Pieline: https://github.com/wtsi-hgi/yascp) is a nextflow pipeline that QCs the scRNA Cellranger data by removing ambient RNA, deconvoluting donors, assigning celltypes, analysing concordances vs expected genotypes"
+}
+ 
+module-whatis   "Yascp version $version is a single cell (scRNA) processing pipeline that takes care of donor deconvolution, ambient rna removal, celltype assignment, clustering and data qc"
+module-whatis   "Name: yascp (https://github.com/wtsi-hgi/yascp)"
+module-whatis   "Version: $version"
+ 
+prepend-path PATH "/scratch/cellfunc/mo246/modules"
